@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.EmpMapper">
+	<resultMap type="Emp" id="empResultMap">
+		<id column="empno" property="empno"/>
+		<result column="ename" property="ename"/>
+		<result column="job" property="job"/>
+		<result column="mgr" property="mgr"/>
+		<result column="hiredate" property="hiredate"/>
+		<result column="sal" property="sal"/>
+		<result column="comm" property="comm"/>
+		<association property="dept" javaType="Dept">
+			<id column="deptno" property="deptno"/>
+			<result column="dname" property="dname"/>
+			<result column="loc" property="loc"/>
+		</association>
+	</resultMap>
+	<!-- 1.通过id查询 -->
+	<select id="getEmp" parameterType="int" resultMap="empResultMap">
+		select 
+			empno,ename,job,mgr,hiredate,sal,comm,d.deptno,dname,loc
+		from emp e,dept d
+		where e.deptno=d.deptno and empno=#{empno}
+	</select>
+	
+	<!-- 2.查询所有 -->
+	<select id="queryEmp" resultMap="empResultMap">
+		select 
+			empno,ename,job,mgr,hiredate,sal,comm,d.deptno,dname,loc
+		from emp e,dept d
+		where e.deptno=d.deptno order by empno
+	</select>
+	
+	<!-- 3.新增 -->
+	<insert id="insertEmp" parameterType="Emp">
+		insert into emp(ename,job,mgr,hiredate,sal,comm,deptno)
+		values(#{ename},#{job},#{mgr},#{hiredate},#{sal},#{comm},#{dept.deptno})
+	</insert>
+	
+	<!-- 3.修改 -->
+	<update id="updateEmp" parameterType="Emp">
+		update emp 
+		<set>
+			<if test="ename!=null and ename!=''">
+				ename=#{ename},
+			</if>
+			<if test="job!=null and job!=''">
+				job=#{job},
+			</if>
+			<if test="mgr!=null">
+				mgr=#{mgr},
+			</if>
+			<if test="hiredate!=null">
+				hiredate=#{hiredate},
+			</if>
+			<if test="sal!=null">
+				sal=#{sal},
+			</if>
+			<if test="comm!=null">
+				comm=#{comm},
+			</if>
+			<if test="dept!=null and dept.deptno!=null">
+				deptno=#{dept.deptno},
+			</if>
+		</set>
+		where empno=#{empno}
+	</update>
+	
+	<!-- 4.删除 -->
+	<delete id="deleteEmp" parameterType="int">
+		delete from emp where empno in
+		<foreach collection="array" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

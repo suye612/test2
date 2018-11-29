@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>springMVC</display-name>
+  <welcome-file-list>
+    <welcome-file>main.jsp</welcome-file>
+  </welcome-file-list>
+  <!--  配置字符编码过滤器-->
+  <filter>
+  	<filter-name>CharacterEncodingFilter</filter-name>
+  	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+ 	 <filter-name>CharacterEncodingFilter</filter-name>
+ 	 <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!-- 支持spring，利用监听器 -->
+  <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+ </listener>
+	<!-- spring核心配置文件 -->
+	<context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:ApplicationContext.xml</param-value>
+   </context-param>
+
+
+<!-- 支持springMVC -->
+<servlet> 
+         <servlet-name>viewSpace</servlet-name>
+         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class> 
+        <!--  配置springMVC的配置文件，默认WEB-INF下viewSpace-servlet.xml -->
+         <init-param>
+         	<param-name>contextConfigLocation</param-name>
+         	<param-value>classpath:viewSpace-servlet.xml</param-value>
+         </init-param>
+		<load-on-startup>1</load-on-startup> 
+</servlet>
+<servlet-mapping>
+	<servlet-name>viewSpace</servlet-name>
+	<url-pattern>*.form</url-pattern> 
+</servlet-mapping>
+
+<servlet>
+        <servlet-name>DisplayChart</servlet-name>
+        <servlet-class>org.jfree.chart.servlet.DisplayChart</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DisplayChart</servlet-name>
+        <url-pattern>/chart</url-pattern>
+</servlet-mapping>
+</web-app>
